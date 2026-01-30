@@ -30,6 +30,13 @@ export function buildEnvVars(env: MoltbotEnv): Record<string, string> {
   if (!envVars.OPENAI_API_KEY && env.OPENAI_API_KEY) {
     envVars.OPENAI_API_KEY = env.OPENAI_API_KEY;
   }
+  // GLM (Z.ai) - passes through as-is, configured in start-moltbot.sh
+  if (env.GLM_API_KEY) {
+    envVars.GLM_API_KEY = env.GLM_API_KEY;
+  }
+  if (env.GLM_BASE_URL) {
+    envVars.GLM_BASE_URL = env.GLM_BASE_URL;
+  }
 
   // Pass base URL (used by start-moltbot.sh to determine provider)
   if (normalizedBaseUrl) {

@@ -208,17 +208,35 @@ if (process.env.SLACK_BOT_TOKEN && process.env.SLACK_APP_TOKEN) {
     config.channels.slack.enabled = true;
 }
 
-// Base URL override (e.g., for Cloudflare AI Gateway)
-// Usage: Set AI_GATEWAY_BASE_URL or ANTHROPIC_BASE_URL to your endpoint like:
-//   https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/anthropic
-//   https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai
+// Configure AI provider based on available credentials
+// Priority: GLM (Z.ai) > OpenAI native > AI Gateway > Anthropic default
 const baseUrl = (process.env.AI_GATEWAY_BASE_URL || process.env.ANTHROPIC_BASE_URL || '').replace(/\/+$/, '');
-const isOpenAI = baseUrl.endsWith('/openai');
+const isOpenAIGateway = baseUrl.endsWith('/openai');
 
-if (isOpenAI) {
-    // Create custom openai provider config with baseUrl override
-    // Omit apiKey so moltbot falls back to OPENAI_API_KEY env var
-    console.log('Configuring OpenAI provider with base URL:', baseUrl);
+if (process.env.GLM_API_KEY) {
+    // Z.ai GLM Coding Plan - uses OpenAI-compatible API
+    // Coding API endpoint: https://api.z.ai/api/coding/paas/v4
+    const glmBaseUrl = (process.env.GLM_BASE_URL || 'https://api.z.ai/api/coding/paas/v4').replace(/\/+$/, '');
+    console.log('Configuring Z.ai GLM Coding Plan with base URL:', glmBaseUrl);
+    config.models = config.models || {};
+    config.models.providers = config.models.providers || {};
+    config.models.providers.glm = {
+        baseUrl: glmBaseUrl,
+        api: 'openai-responses',
+        apiKey: process.env.GLM_API_KEY,
+        models: [
+            { id: 'GLM-4.7', name: 'GLM-4.7', contextWindow: 128000 },
+            { id: 'GLM-4.5-air', name: 'GLM-4.5-air', contextWindow: 128000 },
+        ]
+    };
+    // Add models to the allowlist so they appear in /models
+    config.agents.defaults.models = config.agents.defaults.models || {};
+    config.agents.defaults.models['glm/GLM-4.7'] = { alias: 'GLM-4.7' };
+    config.agents.defaults.models['glm/GLM-4.5-air'] = { alias: 'GLM-4.5-air' };
+    config.agents.defaults.model.primary = 'glm/GLM-4.7';
+} else if (isOpenAIGateway) {
+    // AI Gateway with OpenAI endpoint
+    console.log('Configuring OpenAI provider via AI Gateway with base URL:', baseUrl);
     config.models = config.models || {};
     config.models.providers = config.models.providers || {};
     config.models.providers.openai = {
@@ -237,6 +255,7 @@ if (isOpenAI) {
     config.agents.defaults.models['openai/gpt-4.5-preview'] = { alias: 'GPT-4.5' };
     config.agents.defaults.model.primary = 'openai/gpt-5.2';
 } else if (baseUrl) {
+    // AI Gateway with Anthropic endpoint or custom Anthropic base URL
     console.log('Configuring Anthropic provider with base URL:', baseUrl);
     config.models = config.models || {};
     config.models.providers = config.models.providers || {};
@@ -253,6 +272,36 @@ if (isOpenAI) {
     if (process.env.ANTHROPIC_API_KEY) {
         providerConfig.apiKey = process.env.ANTHROPIC_API_KEY;
     }
+    config.models.providers.anthropic = providerConfig;
+    // Add models to the allowlist so they appear in /models
+    config.agents.defaults.models = config.agents.defaults.models || {};
+    config.agents.defaults.models['anthropic/claude-opus-4-5-20251101'] = { alias: 'Opus 4.5' };
+    config.agents.defaults.models['anthropic/claude-sonnet-4-5-20250929'] = { alias: 'Sonnet 4.5' };
+    config.agents.defaults.models['anthropic/claude-haiku-4-5-20251001'] = { alias: 'Haiku 4.5' };
+    config.agents.defaults.model.primary = 'anthropic/claude-opus-4-5-20251101';
+} else if (process.env.OPENAI_API_KEY) {
+    // Native OpenAI provider (no custom base URL)
+    console.log('Configuring OpenAI provider with native API');
+    config.models = config.models || {};
+    config.models.providers = config.models.providers || {};
+    config.models.providers.openai = {
+        api: 'openai-responses',
+        models: [
+            { id: 'gpt-5.2', name: 'GPT-5.2', contextWindow: 200000 },
+            { id: 'gpt-5', name: 'GPT-5', contextWindow: 200000 },
+            { id: 'gpt-4.5-preview', name: 'GPT-4.5 Preview', contextWindow: 128000 },
+        ]
+    };
+    config.agents.defaults.models = config.agents.defaults.models || {};
+    config.agents.defaults.models['openai/gpt-5.2'] = { alias: 'GPT-5.2' };
+    config.agents.defaults.models['openai/gpt-5'] = { alias: 'GPT-5' };
+    config.agents.defaults.models['openai/gpt-4.5-preview'] = { alias: 'GPT-4.5' };
+    config.agents.defaults.model.primary = 'openai/gpt-5.2';
+} else {
+    // Default to Anthropic without custom base URL (uses built-in pi-ai catalog)
+    console.log('Configuring default Anthropic provider');
+    config.agents.defaults.model.primary = 'anthropic/claude-opus-4-5';
+}
     config.models.providers.anthropic = providerConfig;
     // Add models to the allowlist so they appear in /models
     config.agents.defaults.models = config.agents.defaults.models || {};
