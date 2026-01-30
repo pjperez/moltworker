@@ -93,7 +93,7 @@ echo "----------------------------------------"
 echo "🔑 Optional: Admin UI Authentication"
 echo "----------------------------------------"
 echo "The admin UI lets you manage devices at /_admin"
-echo "You can secure it with Cloudflare Access (Zero Trust) or leave it open (less secure)"
+echo "You can secure it with Cloudflare Access - Zero Trust - or leave it open - less secure"
 echo ""
 echo "Set up Cloudflare Access for admin UI? (y/n) [n]: "
 read -r setup_access
