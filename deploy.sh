@@ -87,19 +87,35 @@ prompt_secret \
     "Generate one by running: openssl rand -hex 32\n   Or just make up a random string (keep it secret!)" \
     "a1b2c3d4e5f6... (64 characters)"
 
-# Secret 3: CF_ACCESS_TEAM_DOMAIN
-prompt_secret \
-    "CF_ACCESS_TEAM_DOMAIN" \
-    "Your Cloudflare Access team domain for the admin UI" \
-    "1. Go to Cloudflare Dashboard → Zero Trust → Access\n   2. If you don't have Access set up, your team domain is shown at the top\n   3. It looks like: yourname.cloudflareaccess.com" \
-    "yourname.cloudflareaccess.com"
+# Optional: Cloudflare Access (for admin UI)
+echo ""
+echo "----------------------------------------"
+echo "🔑 Optional: Admin UI Authentication"
+echo "----------------------------------------"
+echo "The admin UI lets you manage devices at /_admin"
+echo "You can secure it with Cloudflare Access (Zero Trust) or leave it open (less secure)"
+echo ""
+echo "Set up Cloudflare Access for admin UI? (y/n) [n]: "
+read -r setup_access
 
-# Secret 4: CF_ACCESS_AUD
-prompt_secret \
-    "CF_ACCESS_AUD" \
-    "Application Audience tag from Cloudflare Access" \
-    "1. Cloudflare Dashboard → Zero Trust → Access → Applications\n   2. Create an Application (or use existing)\n   3. Click on the application → find 'AUD' tag\n   4. It looks like: a long string of letters and numbers" \
-    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+if [ "$setup_access" = "y" ] || [ "$setup_access" = "Y" ]; then
+    # Secret 3: CF_ACCESS_TEAM_DOMAIN
+    prompt_secret \
+        "CF_ACCESS_TEAM_DOMAIN" \
+        "Your Cloudflare Access team domain" \
+        "Cloudflare Dashboard → Zero Trust → Access (shown at top)" \
+        "yourname.cloudflareaccess.com"
+
+    # Secret 4: CF_ACCESS_AUD
+    prompt_secret \
+        "CF_ACCESS_AUD" \
+        "Application Audience tag" \
+        "Cloudflare Dashboard → Zero Trust → Access → Applications → your app" \
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+else
+    echo "Skipping Cloudflare Access setup. Admin UI will be accessible without authentication."
+    echo "⚠️  WARNING: Anyone with your worker URL can access /_admin"
+fi
 
 echo ""
 echo "=========================================="

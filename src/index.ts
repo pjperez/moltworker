@@ -59,13 +59,9 @@ function validateRequiredEnv(env: MoltbotEnv): string[] {
     missing.push('MOLTBOT_GATEWAY_TOKEN');
   }
 
-  if (!env.CF_ACCESS_TEAM_DOMAIN) {
-    missing.push('CF_ACCESS_TEAM_DOMAIN');
-  }
-
-  if (!env.CF_ACCESS_AUD) {
-    missing.push('CF_ACCESS_AUD');
-  }
+  // Cloudflare Access is optional - only needed for /_admin routes
+  // If not set, admin UI will be accessible without authentication
+  // (the routes will handle missing configuration gracefully)
 
   // Check for AI provider configuration (AI Gateway, Anthropic, OpenAI, or GLM)
   if (env.AI_GATEWAY_API_KEY) {

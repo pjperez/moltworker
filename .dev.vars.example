@@ -1,7 +1,11 @@
 # Copy this to .dev.vars and fill in your values
 # .dev.vars is gitignored and used by wrangler dev
 
+# Choose one AI provider:
 ANTHROPIC_API_KEY=sk-ant-...
+# OPENAI_API_KEY=sk-...
+# GLM_API_KEY=your-zai-api-key
+# GLM_BASE_URL=https://api.z.ai/api/coding/paas/v4  # Coding Plan API endpoint
 
 # Local development mode - skips Cloudflare Access auth and bypasses device pairing
 # DEV_MODE=true
