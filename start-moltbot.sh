@@ -302,11 +302,6 @@ if (process.env.GLM_API_KEY) {
     console.log('Configuring default Anthropic provider');
     config.agents.defaults.model.primary = 'anthropic/claude-opus-4-5';
 }
-    config.agents.defaults.model.primary = 'anthropic/claude-opus-4-5-20251101';
-} else {
-    // Default to Anthropic without custom base URL (uses built-in pi-ai catalog)
-    config.agents.defaults.model.primary = 'anthropic/claude-opus-4-5';
-}
 
 // Write updated config
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
