@@ -71,16 +71,25 @@
     "binding": "BROWSER",
   },
   // Note: CF_ACCOUNT_ID should be set via `wrangler secret put CF_ACCOUNT_ID`
-  // Secrets to configure via `wrangler secret put`:
-  // - ANTHROPIC_API_KEY: Your Anthropic API key
+  // AI Provider Secrets (at least one required):
+  // - GLM_API_KEY: Your Z.ai API key for GLM Coding Plan (default provider)
+  // - ANTHROPIC_API_KEY: Your Anthropic API key (alternative)
+  // - OPENAI_API_KEY: Your OpenAI API key (alternative)
+  // - AI_GATEWAY_API_KEY: Cloudflare AI Gateway key (alternative, requires AI_GATEWAY_BASE_URL)
+  //
+  // Other required secrets:
   // - CF_ACCESS_TEAM_DOMAIN: Cloudflare Access team domain
   // - CF_ACCESS_AUD: Cloudflare Access application audience
-  // - TELEGRAM_BOT_TOKEN: (optional) Telegram bot token
-  // - DISCORD_BOT_TOKEN: (optional) Discord bot token
-  // - SLACK_BOT_TOKEN: (optional) Slack bot token
-  // - SLACK_APP_TOKEN: (optional) Slack app token
-  // - MOLTBOT_GATEWAY_TOKEN: (optional) Token to protect gateway access, if unset device pairing will be used
-  // - CDP_SECRET: (optional) Shared secret for /cdp endpoint authentication
+  // - MOLTBOT_GATEWAY_TOKEN: Token to protect gateway access, if unset device pairing will be used
+  //
+  // Optional chat integrations:
+  // - TELEGRAM_BOT_TOKEN: Telegram bot token
+  // - DISCORD_BOT_TOKEN: Discord bot token
+  // - SLACK_BOT_TOKEN: Slack bot token
+  // - SLACK_APP_TOKEN: Slack app token
+  //
+  // Optional features:
+  // - CDP_SECRET: Shared secret for /cdp endpoint authentication
   //
   // R2 persistent storage secrets (required for data persistence across sessions):
   // - R2_ACCESS_KEY_ID: R2 access key ID (from R2 API tokens)

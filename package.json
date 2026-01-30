@@ -40,8 +40,8 @@
   "license": "MIT",
   "cloudflare": {
     "bindings": {
-      "ANTHROPIC_API_KEY": {
-        "description": "Your [Anthropic API key](https://console.anthropic.com/)."
+      "GLM_API_KEY": {
+        "description": "Your [Z.ai API key](https://z.ai/) for GLM Coding Plan. Alternative: use ANTHROPIC_API_KEY, OPENAI_API_KEY, or AI_GATEWAY_API_KEY via `wrangler secret put`."
       },
       "MOLTBOT_GATEWAY_TOKEN": {
         "description": "Token for gateway access. Generate with: openssl rand -hex 32"
