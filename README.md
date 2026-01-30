@@ -6,7 +6,21 @@ Run [OpenClaw](https://github.com/openclaw/openclaw) (formerly Moltbot, formerly
 
 > **Experimental:** This is a proof of concept demonstrating that OpenClaw can run in Cloudflare Sandbox. It is not officially supported and may break without notice. Use at your own risk.
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/pjperez/moltworker/tree/v1.0.0)
+## Quick Deploy
+
+Run this interactive script to deploy (handles all secrets for you):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/pjperez/moltworker/main/deploy.sh | bash
+```
+
+Or clone and run locally:
+
+```bash
+git clone https://github.com/pjperez/moltworker.git
+cd moltworker
+./deploy.sh
+```
 
 ## Requirements
 
