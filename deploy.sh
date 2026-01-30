@@ -47,28 +47,9 @@ prompt_secret() {
         fi
     fi
     
-    echo "Paste your $name (you WON'T see it on screen for security - press Enter when done):"
-    read -r -s value
+    echo "Paste your $name (input will be VISIBLE - press Enter when done, Ctrl+C to cancel):"
+    read -r value
     echo ""
-    
-    # Show first and last 4 characters for confirmation
-    if [ ${#value} -gt 8 ]; then
-        local prefix="${value:0:4}"
-        local suffix="${value: -4}"
-        local hidden_len=$((${#value} - 8))
-        local hidden=$(printf '%*s' "$hidden_len" '' | tr ' ' '*')
-        echo "📋 Input received: ${prefix}${hidden}${suffix} (${#value} characters)"
-    else
-        echo "📋 Input received: ${#value} characters"
-    fi
-    echo ""
-    echo "Is this correct? (y/n) [y]: "
-    read -r confirm
-    if [ -n "$confirm" ] && [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-        echo "Let's try again..."
-        prompt_secret "$name" "$description" "$where_to_get" "$example"
-        return
-    fi
     
     if [ -z "$value" ]; then
         echo "❌ Error: $name cannot be empty"
