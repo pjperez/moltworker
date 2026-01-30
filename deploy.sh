@@ -119,25 +119,27 @@ fi
 
 echo ""
 echo "=========================================="
-echo "Step 5/5: Optional - R2 Storage Setup"
+echo "Step 5/5: R2 Storage Setup (REQUIRED)"
 echo "=========================================="
 echo ""
 echo "R2 storage saves your data so it doesn't disappear when the container restarts."
-echo "This is OPTIONAL but recommended for production."
+echo "THIS IS REQUIRED - your data will be lost without it!"
 echo ""
-echo "To set up R2 (you can skip this for now):"
+echo "First, create the bucket:"
 echo "1. Cloudflare Dashboard → R2 → Create bucket"
 echo "2. Name it: moltbot-data"
 echo "3. Location: Europe (WEUR)"
-echo "4. R2 → Manage R2 API Tokens → Create"
-echo "5. Then run this script again and it will ask for R2 secrets"
 echo ""
-echo "Skip R2 for now? (y/n) [y]: "
-read -r skip_r2
+echo "Then create API tokens:"
+echo "4. R2 → Manage R2 API Tokens → Create"
+echo "5. Copy the Access Key ID and Secret Access Key"
+echo ""
+echo "Press Enter when you've created the bucket and tokens..."
+read -r
 
-if [ -z "$skip_r2" ] || [ "$skip_r2" = "y" ] || [ "$skip_r2" = "Y" ]; then
-    echo "Skipping R2 setup..."
-else
+setup_r2="y"
+
+if [ "$setup_r2" = "y" ] || [ "$setup_r2" = "Y" ]; then
     prompt_secret \
         "R2_ACCESS_KEY_ID" \
         "R2 API access key ID" \
@@ -187,12 +189,7 @@ echo "   Run: npx wrangler deploy"
 echo "   Or check: Cloudflare Dashboard → Workers & Pages"
 echo ""
 
-if [ -z "$skip_r2" ] || [ "$skip_r2" = "y" ] || [ "$skip_r2" = "Y" ]; then
-    echo "⚠️  WARNING: R2 storage not configured!"
-    echo "   Your data will be lost when the container restarts."
-    echo "   To add R2 later, run this script again."
-    echo ""
-fi
+
 
 echo "Happy hacking! 🎉"
 echo ""
