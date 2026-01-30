@@ -8,19 +8,25 @@ Run [OpenClaw](https://github.com/openclaw/openclaw) (formerly Moltbot, formerly
 
 ## Quick Deploy
 
-Run this interactive script to deploy (handles all secrets for you):
-
+### Option 1: One-liner (easiest)
 ```bash
 curl -fsSL https://raw.githubusercontent.com/pjperez/moltworker/main/deploy.sh | bash
 ```
 
-Or clone and run locally:
-
+### Option 2: Clone and run
 ```bash
 git clone https://github.com/pjperez/moltworker.git
 cd moltworker
 ./deploy.sh
 ```
+
+The script will:
+1. Ask for your **GLM API key** (get it from [z.ai](https://z.ai))
+2. Generate a gateway token for you
+3. Set up Cloudflare Access (for the admin UI)
+4. Build and deploy automatically
+
+**Note:** When pasting secrets, you won't see them on screen (security feature), but they're being captured. The script will show you a masked preview to confirm.
 
 ## Requirements
 
